@@ -1,0 +1,98 @@
+/* Northwind Data Analysis*/
+
+/*Case 1: The UK sales team are visiting the Seattle office. Write a SQL statement
+to display the lastname , firstname , title, country and city of the
+employees you would now expect to be in Seattle. */
+SELECT lastname, firstname, title, city, country
+FROM employees
+WHERE city = 'Seattle';
+
+--Case 2: List the details of all the shippers been used by the company.
+SELECT * 
+FROM shippers
+
+--Case 3: List the names and prices of the ten cheapest products.
+SELECT productname AS Product_Name, unitprice AS Price
+FROM products
+ORDER BY 2 ASC
+LIMIT 10;
+
+--Case 4: List out the countries of Northwind Trader’s suppliers are based.
+SELECT DISTINCT country
+FROM suppliers
+
+--Case 5: Get the total value of those units, for each supplier.
+SELECT DISTINCT suppliers.companyname, products.productname, products.unitsinstock, suppliers.supplierid
+FROM products
+INNER JOIN suppliers ON suppliers.supplierid=products.supplierid
+ORDER BY 4 DESC;
+
+--Case 6: Write a SQL query to display the product name and unit price of the top 3 most expensive products.
+SELECT productname, unitprice
+FROM products
+ORDER BY 2 DESC
+LIMIT 3
+
+/*Case 7:Write a query that displays the full name (i.e. include the title of
+courtesy, last name and first name), title and hire date of the
+employee(s) in the employees table with the job title Sales
+Representative*/
+SELECT CONCAT(titleofcourtesy,firstname,' ',lastname) AS fullname, title, hiredate
+FROM employees
+WHERE title ='Sales Representative'
+
+/*Case 8: The company wants to determine the top 5 ordered products
+from start of business. Write a SQL statement to display the
+product name and the product quantity (Use productquantity
+as the column alias).*/
+
+SELECT * FROM products
+SELECT * FROM orders
+
+SELECT * FROM order_details
+ORDER BY 4 ASC
+
+SELECT products.productname, order_details.quantity AS productquantity
+FROM order_details
+INNER JOIN products
+ON order_details.productid=products.productid
+ORDER BY 2 DESC
+LIMIT 5;
+
+/*Case 9:The company wants to determine the bottom 5 ordered
+products from start of business. Write a SQL statement to
+display the product name and the product quantity (Use
+productquantity as the column alias).*/
+
+SELECT products.productname, order_details.quantity AS productquantity
+FROM order_details
+INNER JOIN products
+ON order_details.productid=products.productid
+ORDER BY 2 ASC
+LIMIT 5;
+
+-- Case 10: How many employees where hired between August 14 1992 and August 4 1993?
+SELECT COUNT(firstname) AS Number_of_employees
+FROM employees
+WHERE hiredate BETWEEN'1992-08-14' AND '1993-08-04'
+
+-- Case 11:What is the total revenue generated based on product ordered between 14/02/1997 and 25/12/1997?
+SELECT SUM(order_details.unitprice*order_details.quantity) AS Total_Revenue
+FROM order_details
+INNER JOIN orders ON order_details.orderid = orders.orderid
+WHERE orders.orderdate BETWEEN '1997-02-14' AND '1997-12-25'
+
+-- Case 12:How many of the products sold are Beverages?
+SELECT COUNT(products.productname), categories.categoryname
+FROM products
+INNER JOIN order_details ON products.productid=order_details.productid
+INNER JOIN categories ON products.categoryid=categories.categoryid
+WHERE categoryname = 'Beverages'
+GROUP BY categories.categoryname;
+
+-- Case 13:What is the count of products that are Confections?
+SELECT COUNT(products.productname), categories.categoryname
+FROM products
+INNER JOIN categories ON categories.categoryid = products.categoryid
+WHERE categoryname = 'Confections'
+GROUP BY categories.categoryname;
